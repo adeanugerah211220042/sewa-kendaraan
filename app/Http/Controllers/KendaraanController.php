@@ -4,54 +4,74 @@ namespace App\Http\Controllers;
 
 use App\Models\Kendaraan;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
 
 class KendaraanController extends Controller
 {
-    public function index(): View
+    public function index()
     {
-        $kendaraan = kendaraan::latest()->paginate(10);
-        return view('kendaraan.index', compact('kendaraan'));
+        $kendaraans = Kendaraan::all();
+        return view('kendaraan.index', compact('kendaraans'));
     }
 
-    public function create(): View
+    public function create()
     {
         return view('kendaraan.create');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
-        // Validate form data
         $request->validate([
-            'no_pol'      => 'required|string|max:10',
-            'no_mesin'    => 'required|string|max:20',
-            'jnis_mobil'  => 'required|in:mpv,city,suv',
-            'nama_mobil'  => 'required|string|max:40',
-            'merk'        => 'required|in:honda,toyota,daihatsu',
-            'kapasitas'   => 'required|string|max:5',
-            'tarif'       => 'required|integer',
+            'no_pol' => 'required|unique:kendaraans',
+            'no_mesin' => 'required|unique:kendaraans',
+            'jenis_mobil' => 'required',
+            'nama_mobil' => 'required',
+            'merk' => 'required',
+            'kapasitas' => 'required',
+            'tarif' => 'required|integer',
         ]);
 
-        // Create a new Kendaraan instance
-        Kendaraan::create([
-            'no_pol'      => $request->no_pol,
-            'no_mesin'    => $request->no_mesin,
-            'jnis_mobil'  => $request->jnis_mobil,
-            'nama_mobil'  => $request->nama_mobil,
-            'merk'        => $request->merk,
-            'kapasitas'   => $request->kapasitas,
-            'tarif'       => $request->tarif,
-        ]);
+        Kendaraan::create($request->all());
 
-        // Redirect to index route with success message
-        return redirect()->route('kendaraan.index')->with('success', 'Data Kendaraan berhasil disimpan!');
+        return redirect()->route('kendaraan.index')
+            ->with('success', 'Kendaraan berhasil ditambahkan.');
     }
 
-    public function destroy($id): RedirectResponse
+    public function show($no_pol)
     {
-        $kendaraan = User::findOrFail($id);
+        $kendaraan = Kendaraan::findOrFail($no_pol);
+        return view('kendaraan.show', compact('kendaraan'));
+    }
+
+    public function edit($no_pol)
+    {
+        $kendaraan = Kendaraan::findOrFail($no_pol);
+        return view('kendaraan.edit', compact('kendaraan'));
+    }
+
+    public function update(Request $request, $no_pol)
+    {
+        $request->validate([
+            'no_mesin' => 'required',
+            'jenis_mobil' => 'required',
+            'nama_mobil' => 'required',
+            'merk' => 'required',
+            'kapasitas' => 'required',
+            'tarif' => 'required|integer',
+        ]);
+
+        $kendaraan = Kendaraan::findOrFail($no_pol);
+        $kendaraan->update($request->all());
+
+        return redirect()->route('kendaraan.index')
+            ->with('success', 'Kendaraan berhasil diperbarui.');
+    }
+
+    public function destroy($no_pol)
+    {
+        $kendaraan = Kendaraan::findOrFail($no_pol);
         $kendaraan->delete();
-        return redirect()->route('kendaraan.index')->with(['success' => 'Data Kendaraan berhasil dihapus!']);
+
+        return redirect()->route('kendaraan.index')
+            ->with('success', 'Kendaraan berhasil dihapus.');
     }
 }

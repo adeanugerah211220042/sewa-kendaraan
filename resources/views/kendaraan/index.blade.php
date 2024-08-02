@@ -1,71 +1,66 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Kendaraan</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body style="background: white">
+@extends('template.app')
 
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-12">
-                <div>
-                    <h3 class="text-center my-4">Data Kendaraan</h3>
-                    <hr>
-                </div>
-                <div class="card border-0 shadow-sm rounded">
-                    <div class="card-body">
-                        <a href="{{ route('kendaraan.create') }}" class="btn btn-md btn-info mb-3">TAMBAH</a>
-                        <a href="{{ route('penyewa.index') }}" class="btn btn-md btn-secondary mb-3">PENYEWA</a> <!-- New button for Penyewa -->
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th scope="col">No Polisi</th>
-                                    <th scope="col">No Mesin</th>
-                                    <th scope="col">Tipe Mobil</th>
-                                    <th scope="col">Nama Mobil</th>
-                                    <th scope="col">Merk</th>
-                                    <th scope="col">Kapasitas</th>
-                                    <th scope="col">Tarif</th>
-                                    <th scope="col" style="width: 20%">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($kendaraan as $index => $data)
-                                    <tr>
-                                        <td>{{ $data->no_pol }}</td>
-                                        <td>{{ $data->no_mesin }}</td>
-                                        <td>{{ $data->jnis_mobil }}</td>
-                                        <td>{{ $data->nama_mobil }}</td>
-                                        <td>{{ $data->merk }}</td>
-                                        <td>{{ $data->kapasitas }}</td>
-                                        <td>{{ $data->tarif }}</td>
-                                        <td class="text-center">
-                                            <form onsubmit="return confirm('Apakah Anda Yakin ?');" action="#" method="POST">
-                                                <a href="#" class="btn btn-sm btn-dark">SHOW</a>
-                                                <a href="#" class="btn btn-sm btn-primary">EDIT</a>
-                                                <button type="submit" class="btn btn-sm btn-danger">HAPUS</button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="8" class="text-center">
-                                            <div class="alert alert-danger">
-                                                Data Kendaraan Belum Ada.
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                        {{-- {{ $kendaraan->links() }} --}}
+@section('content')
+<div class="section-header">
+    <h1>Halaman Kendaraan</h1>
+    <div class="section-header-breadcrumb">
+        <div class="breadcrumb-item active"><a href="#">Dasbor</a></div>
+        <div class="breadcrumb-item"><a href="#">Kendaraan</a></div>
+        <div class="breadcrumb-item">Daftar Kendaraan</div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <a href="{{ route('kendaraan.create') }}" class="btn btn-success">Tambah Kendaraan</a>
+            </div>
+            <div class="card-body">
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
                     </div>
-                </div>
+                @endif
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>No. Pol</th>
+                            <th>No. Mesin</th>
+                            <th>Jenis Mobil</th>
+                            <th>Nama Mobil</th>
+                            <th>Merk</th>
+                            <th>Kapasitas</th>
+                            <th>Tarif</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($kendaraans as $kendaraan)
+                            <tr>
+                                <td>{{ $kendaraan->no_pol }}</td>
+                                <td>{{ $kendaraan->no_mesin }}</td>
+                                <td>{{ $kendaraan->jenis_mobil }}</td>
+                                <td>{{ $kendaraan->nama_mobil }}</td>
+                                <td>{{ $kendaraan->merk }}</td>
+                                <td>{{ $kendaraan->kapasitas }}</td>
+                                <td>{{ $kendaraan->tarif }}</td>
+                                <td>
+                                    <a href="{{ route('kendaraan.show', $kendaraan->no_pol) }}" class="btn btn-info">Lihat</a>
+                                    <a href="{{ route('kendaraan.edit', $kendaraan->no_pol) }}" class="btn btn-warning">Edit</a>
+                                    <form action="{{ route('kendaraan.destroy', $kendaraan->no_pol) }}" method="POST" style="display:inline-block">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger">Hapus</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-</body>
-</html>
+</div>
+@endsection

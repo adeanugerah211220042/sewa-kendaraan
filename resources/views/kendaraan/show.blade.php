@@ -12,15 +12,19 @@
         <div class="row">
             <div class="col-md-12">
                 <div>
-                    <h3 class="text-center my-4">Detail Penyewa</h3>
+                    <h3 class="text-center my-4">Detail Kendaraan</h3>
                     <hr>
                 </div>
                 <div class="card border-0 shadow-sm rounded">
                     <div class="card-body">
-                        <p><strong>Nama:</strong> {{ $penyewa->nama_penyewa }}</p>
-                        <p><strong>Alamat:</strong> {{ $penyewa->alamat }}</p>
-                        <p><strong>No HP:</strong> {{ $penyewa->no_hp }}</p>
-                        <a href="{{ route('penyewa.index') }}" class="btn btn-secondary">Kembali</a>
+                        <p><strong>No. Pol:</strong> {{ $kendaraan->no_pol }}</p>
+                        <p><strong>No. Mesin:</strong> {{ $kendaraan->no_mesin }}</p>
+                        <p><strong>Jenis Mobil:</strong> {{ $kendaraan->jenis_mobil }}</p>
+                        <p><strong>Nama Mobil:</strong> {{ $kendaraan->nama_mobil }}</p>
+                        <p><strong>Merk:</strong> {{ $kendaraan->merk }}</p>
+                        <p><strong>Kapasitas:</strong> {{ $kendaraan->kapasitas }}</p>
+                        <p><strong>Tarif:</strong> {{ $kendaraan->tarif }}</p>
+                        <a href="{{ route('kendaraan.index') }}" class="btn btn-primary">Kembali</a>
                     </div>
                 </div>
             </div>

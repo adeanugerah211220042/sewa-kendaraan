@@ -8,21 +8,26 @@ class CreatePenyewaTable extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('penyewa', function (Blueprint $table) {
-            $table->string('nama_penyewa', 100); // Kolom nama_penyewa dengan tipe varchar
-            $table->text('alamat'); // Kolom alamat dengan tipe text
-            $table->string('no_hp', 15); // Kolom no_hp dengan tipe varchar
-            $table->timestamps(); // Kolom timestamps (created_at dan updated_at)
+            $table->id();
+            $table->string('nama_penyewa', 100);
+            $table->text('alamat');
+            $table->string('no_hp', 15);
+            $table->timestamps();
         });
     }
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('penyewa');
     }

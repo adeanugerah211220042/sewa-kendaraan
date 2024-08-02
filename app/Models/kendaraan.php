@@ -8,15 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Kendaraan extends Model
 {
     use HasFactory;
-    protected $table = 'kendaraan';
+
+    protected $primaryKey = 'no_pol'; // Menggunakan no_pol sebagai primary key
+    protected $keyType = 'string'; // Tipe data primary key adalah string
 
     protected $fillable = [
-        'no_pol',
-        'no_mesin',
-        'jnis_mobil',
-        'nama_mobil',
-        'merk',
-        'kapasitas',
-        'tarif',
+        'no_pol', 'no_mesin', 'jenis_mobil', 'nama_mobil', 'merk', 'kapasitas', 'tarif',
     ];
 }

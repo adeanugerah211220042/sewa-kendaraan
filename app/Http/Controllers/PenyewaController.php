@@ -2,49 +2,59 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Models\Penyewa;
-use Illuminate\View\View;
 use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
-
 
 class PenyewaController extends Controller
 {
-    public function index(): View
+    public function index()
     {
-       $penyewa = penyewa::latest()->paginate(10);
-       return view('penyewa.index',compact('penyewa'));
+        $penyewas = Penyewa::all();
+        return view('penyewa.index', compact('penyewas'));
     }
 
-    public function create(): View
+    public function create()
     {
         return view('penyewa.create');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request)
     {
-       
-        //validate form
         $request->validate([
-            'nama_penyewa'    => 'required|min:5',
-            'alamat'      => 'required|min:5',
-            'no_hp'       => 'required|min:5',
+            'nama_penyewa' => 'required|string|max:100',
+            'alamat' => 'required|string',
+            'no_hp' => 'required|string|max:15',
         ]);
 
-        Penyewa::create([
-            'nama_penyewa'        => $request->nama_penyewa,
-            'alamat'              => $request->alamat,
-            'no_hp'               => $request->no_hp,
-        ]);
-        //redirect to index
-        return redirect()->route('penyewa.index')->with(['success' => 'Data Berhasil Disimpan!']);
+        $penyewa = Penyewa::create($request->all());
+        return redirect()->route('penyewa.index');
     }
-    
-    public function destroy($id): RedirectResponse
+
+    public function show(Penyewa $penyewa)
     {
-        $penyewa = User::findOrFail($id);
+        return view('penyewa.show', compact('penyewa'));
+    }
+
+    public function edit(Penyewa $penyewa)
+    {
+        return view('penyewa.edit', compact('penyewa'));
+    }
+
+    public function update(Request $request, Penyewa $penyewa)
+    {
+        $request->validate([
+            'nama_penyewa' => 'required|string|max:100',
+            'alamat' => 'required|string',
+            'no_hp' => 'required|string|max:15',
+        ]);
+
+        $penyewa->update($request->all());
+        return redirect()->route('penyewa.index');
+    }
+
+    public function destroy(Penyewa $penyewa)
+    {
         $penyewa->delete();
-        return redirect()->route('penyewa.index')->with(['success' => 'Data Berhasil Dihapus!']);
+        return redirect()->route('penyewa.index');
     }
 }
